@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Love You</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: 'Segoe UI', cursive, sans-serif;
+            background: linear-gradient(135deg, #ffb6c1 0%, #ff69b4 100%);
+            overflow: hidden;
+        }
+        .hearts {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 80px 20px 20px 20px;
+            background: rgba(255,255,255,0.85);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(255,105,180,0.2);
+            margin-top: 60px;
+            text-align: center;
+        }
+        h1 {
+            color: #e75480;
+            font-size: 3em;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            animation: pop 1.2s infinite alternate;
+        }
+        @keyframes pop {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.08); }
+        }
+        .love-text {
+            font-size: 1.5em;
+            color: #c2185b;
+            margin-top: 30px;
+            margin-bottom: 30px;
+            animation: fadein 2s;
+        }
+        @keyframes fadein {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .big-heart {
+            font-size: 5em;
+            color: #ff69b4;
+            animation: heartbeat 1s infinite;
+        }
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            20% { transform: scale(1.2); }
+            40% { transform: scale(0.95); }
+            60% { transform: scale(1.1); }
+            80% { transform: scale(0.98); }
+        }
+        .nav { margin-top: 40px; }
+        .nav a { color: #ff69b4; text-decoration: none; font-weight: bold; font-size: 1.1em; margin: 0 12px; }
+        .nav a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <script>
+    // Login check and redirect
+    if (!localStorage.getItem('isLoggedIn')) {
+        localStorage.setItem('redirectAfterLogin', window.location.pathname.replace(/^\//, ''));
+        window.location.href = 'login.html';
+    }
+    </script>
+    <canvas class="hearts"></canvas>
+    <div class="container">
+        <h1>I Love You</h1>
+        <div class="big-heart">❤️</div>
+        <div class="love-text">You are the reason my heart beats with so much joy and love every day.<br>Forever and always, I love you! <br>I love you so much mama</div>
+        <div class="nav">
+            <a href="valentine.html">Back to Main</a>
+        </div>
+    </div>
+    <script>
+        // Animated hearts background
+        const canvas = document.querySelector('.hearts');
+        const ctx = canvas.getContext('2d');
+        let hearts = [];
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+        function randomHeart() {
+            return {
+                x: Math.random() * canvas.width,
+                y: canvas.height + 20,
+                size: 18 + Math.random() * 28,
+                speed: 1 + Math.random() * 2,
+                drift: (Math.random() - 0.5) * 1.5,
+                alpha: 0.7 + Math.random() * 0.3
+            };
+        }
+        function drawHeart(x, y, size, alpha) {
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            ctx.beginPath();
+            ctx.moveTo(x, y + size/4);
+            ctx.bezierCurveTo(x, y, x - size/2, y, x - size/2, y + size/4);
+            ctx.bezierCurveTo(x - size/2, y + size/2, x, y + size/1.2, x, y + size);
+            ctx.bezierCurveTo(x, y + size/1.2, x + size/2, y + size/2, x + size/2, y + size/4);
+            ctx.bezierCurveTo(x + size/2, y, x, y, x, y + size/4);
+            ctx.closePath();
+            ctx.fillStyle = '#ff69b4';
+            ctx.fill();
+            ctx.restore();
+        }
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (hearts.length < 35) {
+                hearts.push(randomHeart());
+            }
+            for (let i = 0; i < hearts.length; i++) {
+                let h = hearts[i];
+                drawHeart(h.x, h.y, h.size, h.alpha);
+                h.y -= h.speed;
+                h.x += h.drift;
+                if (h.y < -40 || h.x < -40 || h.x > canvas.width + 40) {
+                    hearts[i] = randomHeart();
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>

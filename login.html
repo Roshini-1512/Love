@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body { background: linear-gradient(135deg, #ffb6c1 0%, #ff69b4 100%); font-family: 'Segoe UI', cursive, sans-serif; margin: 0; }
+        .container { max-width: 350px; margin: 80px auto; background: rgba(255,255,255,0.92); border-radius: 20px; box-shadow: 0 8px 32px rgba(255,105,180,0.18); padding: 36px 24px; }
+        h2 { color: #e75480; text-align: center; margin-bottom: 28px; }
+        label { display: block; margin-bottom: 8px; color: #c2185b; font-weight: bold; }
+        input[type="text"], input[type="password"] { width: 100%; padding: 10px; margin-bottom: 18px; border: 1px solid #ffb6c1; border-radius: 8px; font-size: 1em; }
+        button { width: 100%; padding: 12px; background: #ff69b4; color: #fff; border: none; border-radius: 8px; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+        button:hover { background: #e75480; }
+        .error { color: #d32f2f; text-align: center; margin-bottom: 12px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Login</h2>
+        <form id="loginForm" autocomplete="off" onsubmit="return handleLogin(event)">
+            <div class="error" id="errorMsg"></div>
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+            <div style="color:#c2185b; font-size:0.98em; margin-bottom:14px; text-align:right;">Hint: I used to call you on our college days 💖</div>
+            <button type="submit">Login</button>
+        </form>
+        
+    </div>
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('errorMsg');
+            // Updated: username = Mukesh, password = karuvapaiya
+            if(username === 'Mukesh' && password === 'karuvapaiya') {
+                localStorage.setItem('isLoggedIn', 'true');
+                window.location.href = 'valentine.html';
+                return false;
+            } else {
+                errorMsg.textContent = 'Invalid username or password!';
+                return false;
+            }
+        }
+    </script>
+</body>
+</html>

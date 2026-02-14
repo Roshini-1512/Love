@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine Photos</title>
+    <style>
+        body { background: linear-gradient(135deg, #ffb6c1 0%, #ff69b4 100%); font-family: 'Segoe UI', cursive, sans-serif; margin: 0; }
+        .container { max-width: 700px; margin: 60px auto; background: rgba(255,255,255,0.85); border-radius: 24px; box-shadow: 0 8px 32px rgba(255,105,180,0.2); padding: 40px 20px; }
+        h1 { color: #e75480; text-align: center; }
+        .photos { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin-top: 24px; }
+        .photos img { width: 120px; height: 120px; object-fit: cover; border-radius: 16px; box-shadow: 0 2px 8px rgba(255,105,180,0.15); border: 3px solid #fff0f6; }
+        .nav { text-align: center; margin-top: 24px; }
+        .nav a { color: #ff69b4; text-decoration: none; margin: 0 12px; font-weight: bold; }
+        .nav a:hover { text-decoration: underline; }
+        @media (max-width: 700px) { .container { padding: 20px 5px; } .photos img { width: 90px; height: 90px; } }
+       .hearts {
+			position: fixed;
+			top: 0; left: 0; width: 100vw; height: 100vh;
+			pointer-events: none;
+			z-index: -1;
+		}
+    </style>
+</head>
+<body>
+	<script>
+	// Login check and redirect
+	if (!localStorage.getItem('isLoggedIn')) {
+		localStorage.setItem('redirectAfterLogin', window.location.pathname.replace(/^\//, ''));
+		window.location.href = 'login.html';
+	}
+	</script>
+         <canvas class="hearts"></canvas>
+
+    <div class="container">
+        <h1>Our Memories</h1>
+        <div class="photos">
+			<img src="images/image1.jpg" alt="Valentine 1">
+			<img src="images/image2.jpg" alt="Valentine 2">
+			<img src="images/image3.jpg" alt="Valentine 3">
+			<img src="images/image4.jpg" alt="Valentine 4">
+
+        </div>
+        <div class="nav">
+                        <a href="valentine.html">Back to Main</a>
+
+           
+
+        </div>
+    </div>
+    <script>
+		// Animated hearts background
+		const canvas = document.querySelector('.hearts');
+		const ctx = canvas.getContext('2d');
+		let hearts = [];
+		function resize() {
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+		}
+		window.addEventListener('resize', resize);
+		resize();
+		function randomHeart() {
+			return {
+				x: Math.random() * canvas.width,
+				y: canvas.height + 20,
+				size: 16 + Math.random() * 24,
+				speed: 1 + Math.random() * 2,
+				drift: (Math.random() - 0.5) * 1.5,
+				alpha: 0.7 + Math.random() * 0.3
+			};
+		}
+		function drawHeart(x, y, size, alpha) {
+			ctx.save();
+			ctx.globalAlpha = alpha;
+			ctx.beginPath();
+			ctx.moveTo(x, y + size/4);
+			ctx.bezierCurveTo(x, y, x - size/2, y, x - size/2, y + size/4);
+			ctx.bezierCurveTo(x - size/2, y + size/2, x, y + size/1.2, x, y + size);
+			ctx.bezierCurveTo(x, y + size/1.2, x + size/2, y + size/2, x + size/2, y + size/4);
+			ctx.bezierCurveTo(x + size/2, y, x, y, x, y + size/4);
+			ctx.closePath();
+			ctx.fillStyle = '#ff69b4';
+			ctx.fill();
+			ctx.restore();
+		}
+		function animate() {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			if (hearts.length < 30) {
+				hearts.push(randomHeart());
+			}
+			for (let i = 0; i < hearts.length; i++) {
+				let h = hearts[i];
+				drawHeart(h.x, h.y, h.size, h.alpha);
+				h.y -= h.speed;
+				h.x += h.drift;
+				if (h.y < -40 || h.x < -40 || h.x > canvas.width + 40) {
+					hearts[i] = randomHeart();
+				}
+			}
+			requestAnimationFrame(animate);
+		}
+		animate();
+
+	</script>
+</body>
+</html>
